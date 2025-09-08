@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // ✅ for navigation
 import "./RecruiterDashboard.css";
 
 const baseURL = "https://hirehub-project-1.onrender.com";
@@ -17,6 +19,14 @@ export default function RecruiterDashboard() {
   const [applications, setApplications] = useState([]);
 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate(); // ✅ navigation hook
+
+  // ✅ Logout Handler
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // clear token
+    alert("✅ Your account is logged out");
+    navigate("/"); // redirect to homepage
+  };
 
   // ✅ Handle form input
   const handleChange = (e) => {
@@ -42,6 +52,9 @@ export default function RecruiterDashboard() {
           Job_description: "",
           Location: "",
         });
+
+        // Refresh applications after posting job
+        fetchApplications();
       }
     } catch (error) {
       console.error("Error posting job:", error.response?.data || error);
@@ -52,16 +65,26 @@ export default function RecruiterDashboard() {
   };
 
   // ✅ Fetch applications for recruiter’s jobs
-  const fetchApplications = async () => {
-    try {
-      const res = await axios.get(`${baseURL}/recruiter/my-jobs/applications`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setApplications(res.data);
-    } catch (error) {
-      console.error("Error fetching applications:", error.response?.data || error);
+ const fetchApplications = async () => {
+  try {
+    const res = await axios.get(`${baseURL}/recruiter/my-jobs/applications`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("🔎 Applications API response:", res.data);
+
+    setApplications(res.data || []);
+  } catch (error) {
+    if (error.response?.status === 404) {
+      console.warn("No jobs or applications yet:", error.response.data?.message);
+      setApplications([]);
+    } else {
+      console.error("❌ Error fetching applications:", error.response?.data || error);
+      setApplications([]);
     }
-  };
+  }
+};
+
 
   useEffect(() => {
     fetchApplications();
@@ -69,7 +92,13 @@ export default function RecruiterDashboard() {
 
   return (
     <div className="recruiter-dashboard">
-      <h1 className="dashboard-title">📢 Recruiter Dashboard</h1>
+      {/* 🔘 Logout Button */}
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">📢 Recruiter Dashboard</h1>
+        <button className="logout-btn" onClick={handleLogout}>
+          🚪 Logout
+        </button>
+      </div>
 
       {/* ✅ Post Job Section */}
       <div className="post-job-section">
@@ -121,9 +150,26 @@ export default function RecruiterDashboard() {
         {applications.length > 0 ? (
           applications.map((app) => (
             <div key={app._id} className="application-card">
-              <h3>{app.job?.Job_role} @ {app.job?.Company_Name}</h3>
-              <p><strong>Applicant:</strong> {app.jobseeker?.name} ({app.jobseeker?.email})</p>
-              <p><strong>Resume:</strong> <a href={app.resumeUrl} target="_blank" rel="noreferrer">View Resume</a></p>
+              <h3>
+                {app.jobId?.Job_role} @ {app.jobId?.Company_Name}
+              </h3>
+              <p>
+                <strong>Applicant:</strong> {app.userId?.name} (
+                {app.userId?.email})
+              </p>
+              <p>
+                <strong>Skills:</strong> {app.userId?.skills || "Not specified"}
+              </p>
+              <p>
+                <strong>Resume:</strong>{" "}
+                {app.resumeUrl ? (
+                  <a href={app.resumeUrl} target="_blank" rel="noreferrer">
+                    View Resume
+                  </a>
+                ) : (
+                  "No resume uploaded"
+                )}
+              </p>
             </div>
           ))
         ) : (
@@ -133,5 +179,3 @@ export default function RecruiterDashboard() {
     </div>
   );
 }
-
-

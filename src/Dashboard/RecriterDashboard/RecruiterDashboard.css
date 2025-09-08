@@ -6,13 +6,38 @@
   min-height: 100vh;
 }
 
+/* ====================== HEADER ====================== */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* ensures wrapping on small screens */
+}
+
 .dashboard-title {
-  text-align: center;
   font-size: 2rem;
   margin-bottom: 2rem;
   color: #0a66c2;
+  flex: 1;
+  text-align: center;
 }
 
+.logout-btn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #d9363e;
+}
+
+/* ====================== SECTIONS ====================== */
 .post-job-section,
 .applications-section {
   background: white;
@@ -22,6 +47,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* ====================== FORM ====================== */
 .job-form {
   display: flex;
   flex-direction: column;
@@ -55,6 +81,7 @@
   background: #004182;
 }
 
+/* ====================== APPLICATION CARD ====================== */
 .application-card {
   background: #f5f9ff;
   border: 1px solid #dce6f1;
@@ -66,4 +93,86 @@
 .application-card h3 {
   margin: 0 0 0.5rem 0;
   color: #0a66c2;
+}
+
+/* ====================== RESPONSIVENESS ====================== */
+
+/* 📱 Mobile (max 600px) */
+@media (max-width: 600px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.5rem;
+    text-align: left;
+    margin-bottom: 1rem;
+  }
+
+  .logout-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  .job-form input,
+  .job-form textarea {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .application-card {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+}
+
+/* 📱📲 Tablets (601px - 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+  .dashboard-title {
+    font-size: 1.8rem;
+  }
+
+  .logout-btn {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+  }
+
+  .job-form {
+    gap: 0.8rem;
+  }
+
+  .job-form input,
+  .job-form textarea {
+    font-size: 1rem;
+  }
+
+  .application-card {
+    padding: 1rem;
+  }
+}
+
+/* 💻 Laptops / Desktops (900px - 1400px) */
+@media (min-width: 901px) and (max-width: 1400px) {
+  .dashboard-title {
+    font-size: 2rem;
+  }
+
+  .logout-btn {
+    font-size: 1rem;
+  }
+
+  .job-form input,
+  .job-form textarea {
+    font-size: 1rem;
+  }
+}
+
+/* 🖥 Large screens (1400px+) */
+@media (min-width: 1401px) {
+  .recruiter-dashboard {
+    max-width: 1300px;
+  }
 }

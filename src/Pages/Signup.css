@@ -80,6 +80,17 @@
     padding: 10px;
   }
 }
+/* Tablet (601px - 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+  .signup-container {
+    max-width: 400px;
+    padding: 25px;
+  }
+
+  .signup-container h2 {
+    font-size: 1.6rem;
+  }
+}
 
 /* Larger Screens */
 @media (min-width: 1024px) {
